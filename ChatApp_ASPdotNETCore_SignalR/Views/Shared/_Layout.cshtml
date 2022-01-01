@@ -20,8 +20,9 @@
     </div>
 
     <div class="main">
-        @if(User.Identity.IsAuthenticated){
-        <vc:room></vc:room>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <vc:room></vc:room>
         }
         <div class="chat">
             @RenderBody()

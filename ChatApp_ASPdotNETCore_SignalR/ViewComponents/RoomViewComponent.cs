@@ -18,14 +18,14 @@ namespace ChatApp.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            //var userid = httpcontext.user.findfirst(claimtypes.nameidentifier).value;
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var chats = _ctx.Chats.ToList();
-                //.Include(x => x.Chat)
-                //.where(x => x.userid == userid
-                //    && x.chat.type == chattype.room)
-                //.select(x => x.chat)
-                //.tolist();
+            var chats = _ctx.ChatUsers
+            .Include(x => x.Chat)
+            .Where(x => x.UserId == userId)
+            .Select(x => x.Chat)
+            .ToList();
+
 
             return View(chats);
         }

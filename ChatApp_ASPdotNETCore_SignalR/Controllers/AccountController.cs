@@ -30,7 +30,7 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
         {
             var user = await _userManager.FindByNameAsync(username);
 
-            if(user == null)
+            if(user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 

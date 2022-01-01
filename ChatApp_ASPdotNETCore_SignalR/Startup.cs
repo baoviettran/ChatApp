@@ -9,8 +9,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChatApp_ASPdotNETCore_SignalR.Database;
 using ChatApp_ASPdotNETCore_SignalR.Models;
+using ChatApp_ASPdotNETCore_SignalR.Infrastructure.Respository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using ChatApp_ASPdotNETCore_SignalR.Hubs;
+using Microsoft.AspNetCore.Http;
 
 namespace ChatApp_ASPdotNETCore_SignalR
 {
@@ -23,12 +26,12 @@ namespace ChatApp_ASPdotNETCore_SignalR
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             var connection = Configuration.GetConnectionString("ChatAppDB");
-            services.AddDbContext<ChatAppDbContext>(options => 
+            services.AddDbContext<ChatAppDbContext>(options =>
             options.UseSqlServer(connection));
 
             services.AddIdentity<User, IdentityRole>(options =>
@@ -41,9 +44,14 @@ namespace ChatApp_ASPdotNETCore_SignalR
             })
                 .AddEntityFrameworkStores<ChatAppDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddTransient<IChatRepository, ChatRepository>();
+
+
+            services.AddSignalR(); 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -57,6 +65,10 @@ namespace ChatApp_ASPdotNETCore_SignalR
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes => {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
 
             app.UseRouting();
 
