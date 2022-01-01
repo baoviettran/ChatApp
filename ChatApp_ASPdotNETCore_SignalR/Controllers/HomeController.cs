@@ -14,6 +14,7 @@ using ChatApp_ASPdotNETCore_SignalR.Infrastructure;
 using ChatApp_ASPdotNETCore_SignalR.Infrastructure.Respository;
 using Microsoft.AspNetCore.SignalR;
 using ChatApp_ASPdotNETCore_SignalR.Hubs;
+using Microsoft.AspNetCore.Identity;
 
 namespace ChatApp_ASPdotNETCore_SignalR.Controllers
 {
@@ -21,11 +22,22 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
     public class HomeController : BaseController
     {
         private IChatRepository _repo;
-        public HomeController(IChatRepository repo) => _repo = repo;
+        private UserManager<User> _userManager;
+        public HomeController(
+            IChatRepository repo, 
+            UserManager<User> userManager)
+        {
+            _repo = repo;
+            _userManager = userManager;
 
+        }
+       
         public IActionResult Index()
         {
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            ViewData["nameUser"] = userName;
             var chats = _repo.GetChats(GetUserId());
+            //var user = await _userManager.FindByNameAsync(username);
 
             return View(chats);
         }
@@ -39,6 +51,18 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
             return View(users);
         }
 
+        public async Task<IActionResult> GetUserByName(string name)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(name);
+                ViewData["nameUser"] = user;
+                return Ok(user);
+            }
+            catch (Exception ex) { 
+                return BadRequest(ex.Message);
+            }
+        }
         public IActionResult Private()
         {
             var chats = _repo.GetPrivateChats(GetUserId());
@@ -56,6 +80,8 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
         [HttpGet("{id}")]
         public IActionResult Chat(int id)
         {
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            ViewData["nameUser"] = userName;
             return View(_repo.GetChat(id));
         }
 
@@ -74,6 +100,7 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
             return RedirectToAction("Chat", "Home", new { id = id });
         }
 
+        [HttpPost]
         public async Task<IActionResult> SendMessage(
             int roomId,
             string message,

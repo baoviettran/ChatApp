@@ -1,9 +1,110 @@
-@model IEnumerable<User>
+﻿    @model IEnumerable<User>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="people-nearby">
+                <div class="nearby-user">
+                    <div class="alert alert-danger alert-dismissible fade" role="alert" id="buttonAlert">
+                        <strong>Có lỗi xảy ra!</strong> Mời nhập đúng tên người dùng.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form onsubmit="search(event)" asp-controller="Home" asp-action="GetUserByName">
+                        <div class="row">
+                            <div class="col-md-9 col-sm-9">
+                                <div class="input-group">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="form1">Tìm kiếm bạn bè</label>
+                                        <input type="search" id="name" name="name" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <button type="submit" class="btn btn-primary mt-4">
+                                    <i class="fas fa-search "></i>Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
-    @foreach(var user in Model){
-    <div>
-        <a asp-controller="Home" asp-action="CreatePrivateRoom" asp-route-userId="@user.Id">
-            @user.UserName
-        </a>
+                </div>
+            </div>
+            <script>
+                console.log(@ViewData["nameUser"]);
+            </script>
+            <div class="people-nearby" id="user_list">
+                @foreach (var user in Model)
+                {
+                    <div class="nearby-user">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user" class="profile-photo-lg">
+                            </div>
+                            <div class="col-md-7 col-sm-7">
+                                <h5><a href="#" class="profile-link">@user.UserName</a></h5>
+                                <p>2000</p>
+                                <p class="text-muted">Ha Noi</p>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <a type="button" asp-controller="Home" asp-action="CreatePrivateRoom" asp-route-userId="@user.Id" class="btn btn-outline-primary pull-right"><i class="fas fa-comments"></i> Chat</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
+</div>
+
+@section scripts {
+<script src="~/js/signalr.min.js"></script>
+<script src="~/js/messageBuilder.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .build();
+
+    var _connectionId = '';
+
+    var search = function (event) {
+        event.preventDefault();
+
+         $(".alert").removeClass("show");
+        var data = new FormData(event.target);
+        document.getElementById('name').value = '';
+        axios.post('/Home/GetUserByName', data)
+            .then(res => {
+                console.log("Message Sent!",res)
+                if(res.status == 200) {
+                    let data = res.data;
+                    let html = `<div class="nearby-user">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user" class="profile-photo-lg">
+                            </div>
+                            <div class="col-md-7 col-sm-7">
+                                <h5><a href="#" class="profile-link">`+`${data.userName}`+`</a></h5>
+                                <p>2000</p>
+                                <p class="text-muted">Ha Noi</p>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <a type="button" href="/Home/CreatePrivateRoom?userId=`+`${data.id}`+`" class="btn btn-outline-primary pull-right"><i class="fas fa-comments"></i> Chat</a>
+                            </div>
+                        </div>
+                    </div>`
+                   return $( "#user_list" ).replaceWith(html);
+                }
+               return $("#buttonAlert").addClass('show')
+
+            })
+            .catch(err => {
+                console.log("Failed to send message");
+                $("#buttonAlert").addClass('show');
+                return; 
+            })
     }
+
+</script>
+}

@@ -89,9 +89,6 @@ namespace ChatApp_ASPdotNETCore_SignalR.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -137,8 +134,6 @@ namespace ChatApp_ASPdotNETCore_SignalR.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -285,13 +280,13 @@ namespace ChatApp_ASPdotNETCore_SignalR.Migrations
             modelBuilder.Entity("ChatApp_ASPdotNETCore_SignalR.Models.ChatUser", b =>
                 {
                     b.HasOne("ChatApp_ASPdotNETCore_SignalR.Models.Chat", "Chat")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ChatApp_ASPdotNETCore_SignalR.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Chats")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -304,13 +299,6 @@ namespace ChatApp_ASPdotNETCore_SignalR.Migrations
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ChatApp_ASPdotNETCore_SignalR.Models.User", b =>
-                {
-                    b.HasOne("ChatApp_ASPdotNETCore_SignalR.Models.Chat", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -12,7 +12,6 @@ namespace ChatApp_ASPdotNETCore_SignalR.Infrastructure.Respository
         IEnumerable<Chat> GetChats(string userId);
         Task<int> CreatePrivateRoom(string rootId, string targetId);
         IEnumerable<Chat> GetPrivateChats(string userId);
-
         Task<Message> CreateMessage(int chatId, string message, string userId);
     }
 }

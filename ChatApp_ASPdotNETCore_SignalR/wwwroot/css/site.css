@@ -1,5 +1,6 @@
 ﻿* {
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -8,15 +9,21 @@ body {
     width: 100wh;
     display: flex;
     flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
 }
-
+.username {
+    display: flex;
+    color: #fff;
+    font-size: 18px;
+    float:left;
+}
 .navbar {
     background-color: #342742;
     min-height: 50px;
     z-index: 100;
     box-shadow: 0 1px 2px 0 #333;
-    display: flex;
-    flex-direction: row;
+    color:white;
+        flex-direction: row;
 }
 
     .navbar > a {
@@ -178,4 +185,57 @@ body {
 
     .modal-body > footer {
         text-align: center;
+        /* navigation bar */
     }
+
+   body{
+    margin-top: 20px;
+    background: #FAFAFA;
+}
+/*==================================================
+  Nearby People CSS
+  ==================================================*/
+
+.people-nearby .google-maps {
+    background: #f8f8f8;
+    border-radius: 4px;
+    border: 1px solid #f1f2f2;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+    .people-nearby .google-maps .map {
+        height: 300px;
+        width: 100%;
+        border: none;
+    }
+
+.people-nearby .nearby-user {
+    padding: 20px 0;
+    border-top: 1px solid #f1f2f2;
+    border-bottom: 1px solid #f1f2f2;
+    margin-bottom: 20px;
+}
+
+img.profile-photo-lg {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
+#chat3 .form-control {
+    border-color: transparent;
+}
+
+    #chat3 .form-control:focus {
+        border-color: transparent;
+        box-shadow: inset 0px 0px 0px 1px transparent;
+    }
+
+.badge-dot {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    margin-left: 2.9rem;
+    margin-top: -.75rem;
+}

@@ -10,6 +10,7 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
 
+        
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager)
@@ -36,7 +37,8 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    ViewData["username"] = username;
+                    return RedirectToAction("Index", "Home", new { ViewData });
                 }
             }
             
