@@ -24,19 +24,24 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
         private IChatRepository _repo;
         private UserManager<User> _userManager;
         public HomeController(
-            IChatRepository repo, 
+            IChatRepository repo,
             UserManager<User> userManager)
         {
             _repo = repo;
             _userManager = userManager;
 
         }
-       
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userName = User.FindFirstValue(ClaimTypes.Name);
             ViewData["nameUser"] = userName;
             var chats = _repo.GetChats(GetUserId());
+            var user = await _userManager.FindByIdAsync(GetUserId());
+            ViewData["phone"] = user.phone;
+            ViewData["address"] = user.address;
+            ViewData["firstName"] = user.firstName;
+            ViewData["lastName"] = user.lastName;
+            ViewData["Email"] = user.Email;
             //var user = await _userManager.FindByNameAsync(username);
 
             return View(chats);
@@ -59,7 +64,8 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
                 ViewData["nameUser"] = user;
                 return Ok(user);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }
@@ -100,7 +106,7 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
             return RedirectToAction("Chat", "Home", new { id = id });
         }
 
-        [HttpPost]
+
         public async Task<IActionResult> SendMessage(
             int roomId,
             string message,
@@ -117,6 +123,20 @@ namespace ChatApp_ASPdotNETCore_SignalR.Controllers
                 });
 
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> updateUser( string firstName, string lastname, int phone ,string address ,string email )
+        {
+            try
+            {
+                var user = new User() { phone = phone, firstName = firstName, address = address, lastName = lastname ,Email = email};
+                await _repo.UpdateUser(GetUserId(), user);
+                return Ok();
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -12,7 +12,6 @@ namespace ChatApp_ASPdotNETCore_SignalR.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<ChatUser> ChatUsers { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

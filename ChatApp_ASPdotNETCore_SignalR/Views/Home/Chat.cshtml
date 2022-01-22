@@ -1,7 +1,7 @@
 ﻿@model Chat
-<div class="chat-body card">
+<div class="chat-body card overflow-auto" style="overflow: scroll;">
     <div class="row mt-2 ml-2">
-        <div class="col-md-9">
+        <div class="col-md-12 overflow-auto">
             <div class="input-group rounded">
               <label>Bạn đang trong cuộc trò chuyện với </label>
             </div>
@@ -30,35 +30,6 @@
                     </div>
                 }
             }
-        </div>
-        <div class="col-md-3 rounded" style="background:#e7e7ef">
-            <div class="border">
-                <div class="">
-                    <div class="d-flex flex-column align-items-center text-center">
-                        <img class="rounded-circle" width="75px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
-                        <span class="font-weight-bold">@ViewData["nameUser"]</span><span class="text-black-50">null</span>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                    <h7 class="text-right">Chi tiết tin nhắn </h7>
-                    <p>***</p>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                    <h7 class="text-right">Tìm kiếm trong cuộc trò truyện </h7>
-
-                </div>
-                <div class="input-group mb-3 mt-3">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                           aria-describedby="search-addon" />
-                    <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-                </div>
-                <div class="input-group mb-3 mt-3">
-                    <h7 class="text-right">File </h7>
-
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -110,7 +81,7 @@
             </div>`
         }
             console.log(data)
-      return  document.querySelector('.chat-body').(html)
+        return $('.chat-body').append(html)
     })
 
     connection.start()
@@ -130,7 +101,6 @@
 
         var data = new FormData(event.target);
         document.getElementById('message-input').value = '';
-        console.log(data)
         axios.post('/Home/SendMessage', data)
             .then(res => {
                 console.log("Message Sent!")

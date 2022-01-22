@@ -86,6 +86,8 @@ body {
     flex-direction: column;
     padding-bottom: 1rem;
     overflow: auto;
+    height: calc(100vh - 110px);
+    overflow-y: scroll;
 }
 
 .message {

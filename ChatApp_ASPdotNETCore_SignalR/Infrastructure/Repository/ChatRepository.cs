@@ -113,5 +113,19 @@ namespace ChatApp_ASPdotNETCore_SignalR.Infrastructure.Respository
 
             await _ctx.SaveChangesAsync();
         }
+
+        public async Task UpdateUser(string userid, User user)
+        {
+            var entity = _ctx.Users.FirstOrDefault(item => item.Id == userid);
+            if (entity != null)
+            {
+                entity.address = user.address;
+                entity.firstName = user.firstName;
+                entity.lastName= user.lastName;
+                entity.phone = user.phone;
+                entity.Email = user.Email;
+                _ctx.SaveChanges();
+            }
+        }
     }
 }
